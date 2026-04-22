@@ -272,9 +272,6 @@ An ERR above 1.0 triggers a penalty calculation, but the penalty tier depends on
 ## SQL EXHIBIT — HRRP CLEANING LOGIC
 
 The following query mirrors the R cleaning and classification logic used in this report. It is included as a display-only portfolio piece demonstrating SQL literacy alongside the R analysis above.
-```{sql connection=}
-
-```
 
 ::: {.sql-exhibit}
 ```sql
@@ -455,12 +452,7 @@ ggsave(here("charts", "chart2_err_by_condition.png"), width = 10, height = 6, dp
 library(httr2)
 library(janitor)
 
-cms_raw <- request("https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0") %>%
-  req_url_query(limit = 10000, offset = 0) %>%
-  req_perform() %>%
-  resp_body_json(simplifyVector = TRUE)
-
-hospital_info <- as_tibble(cms_raw$results) %>%
+hospital_info <- read_csv("https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1770163599/Hospital_General_Information.csv") %>%
   clean_names() %>%
   select(facility_id, hospital_ownership) %>%
   mutate(
@@ -515,6 +507,5 @@ ggplot(plot_data, aes(x = ownership_group, y = pct, fill = penalty_tier)) +
   )
 
 ggsave(here("charts", "chart3_penalty_by_ownership.png"), width = 10, height = 5, dpi = 300, bg = "#FAFAF8")
-
 ```
 
